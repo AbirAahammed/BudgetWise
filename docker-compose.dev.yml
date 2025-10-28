@@ -1,0 +1,44 @@
+services:
+  budgetwise-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "9002:9002"  # Using the dev port from package.json
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - MONGODB_URI=mongodb://budgetwise:budgetwise_password@mongodb-dev:27017/budgetwise_dev?authSource=admin
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    restart: unless-stopped
+    networks:
+      - budgetwise-dev-network
+    depends_on:
+      - mongodb-dev
+    stdin_open: true
+    tty: true
+
+  mongodb-dev:
+    image: mongo:7
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: budgetwise
+      MONGO_INITDB_ROOT_PASSWORD: budgetwise_password
+      MONGO_INITDB_DATABASE: budgetwise_dev
+    volumes:
+      - mongodb_dev_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    ports:
+      - "27018:27017"  # Different port to avoid conflicts with production
+    restart: unless-stopped
+    networks:
+      - budgetwise-dev-network
+
+networks:
+  budgetwise-dev-network:
+    driver: bridge
+
+volumes:
+  mongodb_dev_data:
