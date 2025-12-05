@@ -2,10 +2,9 @@
 replicaCount: 1
 
 image:
-  repository: localhost:5000/budgetwise
+  repository: ghcr.io/AbirAahammed/BudgetWise
   pullPolicy: IfNotPresent
-  tag: "1.0.0"
-
+  tag: "latest"
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
