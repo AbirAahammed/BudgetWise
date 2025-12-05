@@ -6,7 +6,6 @@
 - Expense Tracking: Record and categorize expenses with optional descriptions and tags.
 - Budget Creation: Set monthly budgets for different categories, allowing users to allocate funds effectively.
 - Spending Insights: Provide a summary of spending patterns using charts, such as bar graphs for comparing spending across categories or line graphs to show spending trends.
-- AI-Powered Budget Recommendations: Offer customized advice on adjusting budgets and expenses based on the user's income, spending patterns, and financial objectives; an LLM tool suggests cuts, new saving strategies or other tweaks, that will have the greatest impact in achieving a balanced budget.
 - Dark and Light Mode: Option to switch between dark and light mode.
 
 ## Style Guidelines:

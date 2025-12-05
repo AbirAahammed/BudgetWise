@@ -4,6 +4,7 @@ import React from 'react';
 import { OverviewCards } from '@/components/dashboard/overview-cards';
 import { CategorySpendingChart } from '@/components/dashboard/category-spending-chart';
 import { RecentTransactions } from '@/components/dashboard/recent-transactions';
+import { MonthlySpendingChart } from '@/components/dashboard/monthly-spending-chart';
 
 export default function DashboardPage() {
   return (
@@ -19,6 +20,9 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <CategorySpendingChart />
+        <MonthlySpendingChart />
+      </div>
+       <div className="grid grid-cols-1 gap-8">
         <RecentTransactions />
       </div>
     </div>
