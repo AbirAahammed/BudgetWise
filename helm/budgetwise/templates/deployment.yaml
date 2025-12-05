@@ -23,9 +23,8 @@ spec:
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-{{- if .Values.imagePullSecrets }}
-{{ toYaml .Values.imagePullSecrets | indent 8 }}
-{{- end }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "budgetwise.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
