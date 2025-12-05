@@ -1,0 +1,45 @@
+{{- if .Values.mongodb.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "budgetwise.fullname" . }}-mongodb
+  namespace: {{ .Chart.Name }}
+  labels:
+    {{- include "budgetwise.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "budgetwise.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: mongodb
+  template:
+    metadata:
+      labels:
+        {{- include "budgetwise.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo:7.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: mongodb
+              containerPort: 27017
+              protocol: TCP
+          env:
+            - name: MONGO_INITDB_DATABASE
+              value: "budgetwise"
+          {{- if not .Values.mongodb.persistence.enabled }}
+          volumeMounts:
+            - name: mongodb-data
+              mountPath: /data/db
+          {{- end }}
+          resources:
+            {{- toYaml .Values.mongodb.resources | nindent 12 }}
+      {{- if not .Values.mongodb.persistence.enabled }}
+      volumes:
+        - name: mongodb-data
+          emptyDir: {}
+      {{- end }}
+{{- end }}

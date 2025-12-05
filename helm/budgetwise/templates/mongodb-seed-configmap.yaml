@@ -1,0 +1,68 @@
+{{- if and .Values.mongodb.enabled .Values.seed.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "budgetwise.fullname" . }}-mongodb-seed
+  namespace: {{ .Chart.Name }}
+  labels:
+    {{- include "budgetwise.labels" . | nindent 4 }}
+data:
+  seed-data.js: |
+    print('Seeding budgetwise database...');
+    const db = db.getSiblingDB('budgetwise');
+    
+    // Create collections
+    db.createCollection('users');
+    db.createCollection('budgets');
+    db.createCollection('transactions');
+    db.createCollection('categories');
+    
+    // Create indexes for better performance
+    db.users.createIndex({ "email": 1 }, { unique: true });
+    db.budgets.createIndex({ "category": 1 });
+    db.transactions.createIndex({ "category": 1 });
+    db.transactions.createIndex({ "date": -1 });
+    db.categories.createIndex({ "value": 1 }, { unique: true });
+    
+    // Seed default expense categories
+    const expenseCategories = [
+      { value: 'housing', label: 'Housing', type: 'expense', icon: 'Home' },
+      { value: 'transportation', label: 'Transportation', type: 'expense', icon: 'Car' },
+      { value: 'food', label: 'Food', type: 'expense', icon: 'Utensils' },
+      { value: 'groceries', label: 'Groceries', type: 'expense', icon: 'ShoppingCart' },
+      { value: 'health', label: 'Health', type: 'expense', icon: 'HeartPulse' },
+      { value: 'entertainment', label: 'Entertainment', type: 'expense', icon: 'Ticket' },
+      { value: 'education', label: 'Education', type: 'expense', icon: 'GraduationCap' },
+      { value: 'personal', label: 'Personal', type: 'expense', icon: 'Gift' },
+      { value: 'other', label: 'Other', type: 'expense', icon: 'MoreHorizontal' }
+    ];
+    
+    // Seed default income categories
+    const incomeCategories = [
+      { value: 'salary', label: 'Salary', type: 'income', icon: 'Briefcase' },
+      { value: 'freelance', label: 'Freelance', type: 'income', icon: 'DollarSign' },
+      { value: 'investment', label: 'Investment', type: 'income', icon: 'PiggyBank' },
+      { value: 'gift', label: 'Gift', type: 'income', icon: 'Gift' },
+      { value: 'other-income', label: 'Other Income', type: 'income', icon: 'MoreHorizontal' }
+    ];
+    
+    // Insert categories with upsert to avoid duplicates
+    [...expenseCategories, ...incomeCategories].forEach(category => {
+      db.categories.updateOne(
+        { value: category.value },
+        { $set: category },
+        { upsert: true }
+      );
+    });
+    
+    // Seed default budgets for expense categories
+    expenseCategories.forEach(category => {
+      db.budgets.updateOne(
+        { category: category.value },
+        { $set: { category: category.value, amount: 500 } },
+        { upsert: true }
+      );
+    });
+    
+    print('Database seeding completed successfully!');
+{{- end }}

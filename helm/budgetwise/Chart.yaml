@@ -1,0 +1,20 @@
+apiVersion: v2
+name: budgetwise
+description: A personal budget management application built with Next.js and MongoDB
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
+keywords:
+  - budget
+  - finance
+  - nextjs
+  - mongodb
+
+home: https://github.com/AbirAahammed/BudgetWise
+sources:
+  - https://github.com/AbirAahammed/BudgetWise
+
+maintainers:
+  - name: Abir Aahammed
+    url: https://github.com/AbirAahammed

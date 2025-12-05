@@ -1,0 +1,63 @@
+{{- if and .Values.mongodb.enabled .Values.seed.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "budgetwise.fullname" . }}-mongodb-seed
+  namespace: {{ .Chart.Name }}
+  labels:
+    {{- include "budgetwise.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "budgetwise.selectorLabels" . | nindent 8 }}
+        job: mongodb-seed
+    spec:
+      restartPolicy: {{ .Values.seed.job.restartPolicy }}
+      containers:
+      - name: mongodb-seed
+        image: mongo:7
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Waiting for MongoDB to be ready..."
+          until mongosh --host {{ include "budgetwise.fullname" . }}-mongodb \
+            --username $MONGODB_ROOT_USER \
+            --password $MONGODB_ROOT_PASSWORD \
+            --authenticationDatabase admin \
+            --eval 'db.adminCommand("ping")' >/dev/null 2>&1; do
+            echo "MongoDB not ready, waiting..."
+            sleep 2
+          done
+          echo "MongoDB is ready, running seed script..."
+          mongosh --host {{ include "budgetwise.fullname" . }}-mongodb \
+            --username $MONGODB_ROOT_USER \
+            --password $MONGODB_ROOT_PASSWORD \
+            --authenticationDatabase admin \
+            /seed-data/seed-data.js
+        env:
+        - name: MONGODB_ROOT_USER
+          value: {{ .Values.mongodb.auth.rootUser | quote }}
+        - name: MONGODB_ROOT_PASSWORD
+          value: {{ .Values.mongodb.auth.rootPassword | quote }}
+        volumeMounts:
+        - name: seed-data
+          mountPath: /seed-data
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
+      volumes:
+      - name: seed-data
+        configMap:
+          name: {{ include "budgetwise.fullname" . }}-mongodb-seed
+  backoffLimit: {{ .Values.seed.job.backoffLimit }}
+{{- end }}
