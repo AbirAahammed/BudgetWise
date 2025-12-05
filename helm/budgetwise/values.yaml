@@ -7,7 +7,7 @@ image:
   tag: "main"
 
 imagePullSecrets:
-  - name: ghcr-secret
+  - name: budgetwise-mongodb-secret
 nameOverride: ""
 fullnameOverride: ""
 
