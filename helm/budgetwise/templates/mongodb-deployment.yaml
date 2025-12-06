@@ -36,16 +36,17 @@ spec:
             - name: MONGO_INITDB_ROOT_PASSWORD
               value: {{ .Values.mongodb.auth.rootPassword | quote }}
             {{- end }}
-          {{- if not .Values.mongodb.persistence.enabled }}
           volumeMounts:
             - name: mongodb-data
               mountPath: /data/db
-          {{- end }}
           resources:
             {{- toYaml .Values.mongodb.resources | nindent 12 }}
-      {{- if not .Values.mongodb.persistence.enabled }}
       volumes:
         - name: mongodb-data
+          {{- if .Values.mongodb.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "budgetwise.fullname" . }}-mongodb-pvc
+          {{- else }}
           emptyDir: {}
-      {{- end }}
+          {{- end }}
 {{- end }}

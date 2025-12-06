@@ -80,7 +80,10 @@ mongodb:
   auth:
     enabled: false  # Disable auth for simplicity
   persistence:
-    enabled: false  # No persistence to avoid permission issues
+    enabled: true
+    size: 8Gi
+    accessMode: ReadWriteOnce
+    storageClass: ""  # Use default storage class
   resources:
     limits:
       cpu: 500m
