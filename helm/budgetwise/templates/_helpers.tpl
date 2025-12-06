@@ -63,5 +63,5 @@ Create the name of the service account to use
 
 
 {{- define "budgetwise.ghcr-secret-name" -}}
-{{- printf "%s-ghcr-secret" (include "budgetwise.fullname" .) -}}
+{{- printf "ghcr-secret" -}}
 {{- end -}}
