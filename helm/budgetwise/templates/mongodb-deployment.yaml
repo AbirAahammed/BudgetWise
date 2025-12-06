@@ -30,6 +30,12 @@ spec:
           env:
             - name: MONGO_INITDB_DATABASE
               value: "budgetwise"
+            {{- if .Values.mongodb.auth.enabled }}
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: {{ .Values.mongodb.auth.rootUser | quote }}
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: {{ .Values.mongodb.auth.rootPassword | quote }}
+            {{- end }}
           {{- if not .Values.mongodb.persistence.enabled }}
           volumeMounts:
             - name: mongodb-data
