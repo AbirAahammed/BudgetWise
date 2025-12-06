@@ -60,3 +60,8 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+
+{{- define "budgetwise.ghcr-secret-name" -}}
+{{- printf "%s-ghcr-secret" (include "budgetwise.fullname" .) -}}
+{{- end -}}
