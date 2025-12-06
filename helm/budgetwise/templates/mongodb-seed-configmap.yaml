@@ -31,12 +31,36 @@ data:
       print('Created categories collection');
     }
     
-    // Create indexes for better performance (createIndex is idempotent)
-    db.users.createIndex({ "email": 1 }, { unique: true });
-    db.budgets.createIndex({ "category": 1 });
-    db.transactions.createIndex({ "category": 1 });
-    db.transactions.createIndex({ "date": -1 });
-    db.categories.createIndex({ "value": 1 }, { unique: true });
+    // Create indexes for better performance (with error handling for existing indexes)
+    try {
+      db.users.createIndex({ "email": 1 }, { unique: true });
+    } catch (e) {
+      if (e.code !== 85 && e.code !== 86) throw e; // Ignore index already exists errors
+    }
+    
+    try {
+      db.budgets.createIndex({ "category": 1 });
+    } catch (e) {
+      if (e.code !== 85 && e.code !== 86) throw e;
+    }
+    
+    try {
+      db.transactions.createIndex({ "category": 1 });
+    } catch (e) {
+      if (e.code !== 85 && e.code !== 86) throw e;
+    }
+    
+    try {
+      db.transactions.createIndex({ "date": -1 });
+    } catch (e) {
+      if (e.code !== 85 && e.code !== 86) throw e;
+    }
+    
+    try {
+      db.categories.createIndex({ "value": 1 }, { unique: true });
+    } catch (e) {
+      if (e.code !== 85 && e.code !== 86) throw e;
+    }
     print('Indexes created/verified');
     
     // Seed default expense categories
