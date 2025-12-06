@@ -11,18 +11,33 @@ data:
     print('Seeding budgetwise database...');
     const db = db.getSiblingDB('budgetwise');
     
-    // Create collections
-    db.createCollection('users');
-    db.createCollection('budgets');
-    db.createCollection('transactions');
-    db.createCollection('categories');
+    // Check if collections exist, create only if they don't
+    const collections = db.getCollectionNames();
     
-    // Create indexes for better performance
+    if (!collections.includes('users')) {
+      db.createCollection('users');
+      print('Created users collection');
+    }
+    if (!collections.includes('budgets')) {
+      db.createCollection('budgets');
+      print('Created budgets collection');
+    }
+    if (!collections.includes('transactions')) {
+      db.createCollection('transactions');
+      print('Created transactions collection');
+    }
+    if (!collections.includes('categories')) {
+      db.createCollection('categories');
+      print('Created categories collection');
+    }
+    
+    // Create indexes for better performance (createIndex is idempotent)
     db.users.createIndex({ "email": 1 }, { unique: true });
     db.budgets.createIndex({ "category": 1 });
     db.transactions.createIndex({ "category": 1 });
     db.transactions.createIndex({ "date": -1 });
     db.categories.createIndex({ "value": 1 }, { unique: true });
+    print('Indexes created/verified');
     
     // Seed default expense categories
     const expenseCategories = [
@@ -54,6 +69,7 @@ data:
         { upsert: true }
       );
     });
+    print('Categories seeded/updated');
     
     // Seed default budgets for expense categories
     expenseCategories.forEach(category => {
@@ -63,6 +79,7 @@ data:
         { upsert: true }
       );
     });
+    print('Budgets seeded/updated');
     
     print('Database seeding completed successfully!');
 {{- end }}
