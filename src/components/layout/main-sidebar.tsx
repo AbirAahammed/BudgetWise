@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   PiggyBank,
   Wallet,
+  TrendingDown,
 } from 'lucide-react';
 
 import {
@@ -34,6 +35,11 @@ const links = [
     href: '/budgets',
     label: 'Budgets',
     icon: PiggyBank,
+  },
+  {
+    href: '/debt',
+    label: 'Debt',
+    icon: TrendingDown,
   },
 ];
 

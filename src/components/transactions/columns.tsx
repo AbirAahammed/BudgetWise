@@ -6,6 +6,8 @@ import { useApp } from '@/context/app-context';
 import { Badge } from '@/components/ui/badge';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 import { useMemo } from 'react';
+import { EditTransactionDialog } from './edit-transaction-dialog';
+import { RemoveTransactionDialog } from './remove-transaction-dialog';
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -73,6 +75,19 @@ export const columns: ColumnDef<Transaction>[] = [
     cell: ({ row }) => {
       const date = new Date(row.getValue('date'));
       return <div>{date.toLocaleDateString()}</div>;
+    },
+  },
+  {
+    id: 'actions',
+    header: 'Actions',
+    cell: function Cell({ row }) {
+      const transaction = row.original;
+      return (
+        <div className="flex items-center gap-2">
+          <EditTransactionDialog transaction={transaction} />
+          <RemoveTransactionDialog transaction={transaction} />
+        </div>
+      );
     },
   },
 ];

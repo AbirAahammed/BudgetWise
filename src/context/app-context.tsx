@@ -80,6 +80,8 @@ type AppContextType = {
   totalExpenses: number;
   netBalance: number;
   addTransaction: (transaction: NewTransaction) => Promise<void>;
+  updateTransaction: (id: string, transaction: Partial<NewTransaction>) => Promise<void>;
+  deleteTransaction: (id: string) => Promise<void>;
   updateBudget: (budget: Budget) => Promise<void>;
   addCategory: (category: NewCategory) => Promise<void>;
   removeCategory: (categoryValue: string) => Promise<void>;
@@ -91,6 +93,8 @@ const AppContext = createContext<AppContextType>({
   totalExpenses: 0,
   netBalance: 0,
   addTransaction: async () => {},
+  updateTransaction: async () => {},
+  deleteTransaction: async () => {},
   updateBudget: async () => {},
   addCategory: async () => {},
   removeCategory: async () => {},
@@ -195,6 +199,29 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setState(s => ({ ...s, transactions: [...(s.transactions || []), newTransaction]}));
   }, []);
 
+  const updateTransaction = useCallback(async (id: string, transaction: Partial<NewTransaction>) => {
+    const updatedTransaction = await fetch(`/api/transactions?id=${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(transaction),
+    }).then(r => {
+      if (!r.ok) throw new Error(`Failed to update transaction`);
+      return r.json();
+    });
+    setState(s => ({
+      ...s,
+      transactions: (s.transactions || []).map(t => t.id === id ? updatedTransaction : t)
+    }));
+  }, []);
+
+  const deleteTransaction = useCallback(async (id: string) => {
+    await deleteData(`transactions?id=${id}`);
+    setState(s => ({
+      ...s,
+      transactions: (s.transactions || []).filter(t => t.id !== id)
+    }));
+  }, []);
+
   const updateBudget = useCallback(async (budget: Budget) => {
     const updatedBudget = await postData('budgets', budget);
     setState(s => ({ 
@@ -232,6 +259,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     totalExpenses, 
     netBalance,
     addTransaction,
+    updateTransaction,
+    deleteTransaction,
     updateBudget,
     addCategory,
     removeCategory

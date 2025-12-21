@@ -23,6 +23,29 @@ export async function POST(request: Request) {
   }
 }
 
+export async function PUT(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    
+    if (!id) {
+      return NextResponse.json({ message: 'Transaction ID is required' }, { status: 400 });
+    }
+    
+    const transactionData = await request.json();
+    const updatedTransaction = await mongoService.updateTransaction(id, transactionData);
+    
+    if (!updatedTransaction) {
+      return NextResponse.json({ message: 'Transaction not found' }, { status: 404 });
+    }
+    
+    return NextResponse.json(updatedTransaction);
+  } catch (error) {
+    console.error('Error updating transaction:', error);
+    return NextResponse.json({ message: 'Error updating transaction', error }, { status: 500 });
+  }
+}
+
 export async function DELETE(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
