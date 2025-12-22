@@ -6,6 +6,11 @@ image:
   pullPolicy: IfNotPresent
   tag: "main"
 
+perfin:
+  image:
+    repository: ghcr.io/abiraahammed/perfin
+    pullPolicy: IfNotPresent
+    tag: "main"
 imagePullSecrets:
   - name: ghcr-secret
 nameOverride: ""
