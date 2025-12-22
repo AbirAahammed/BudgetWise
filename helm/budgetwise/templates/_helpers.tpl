@@ -67,9 +67,9 @@ Create the name of the service account to use
 {{- end -}}
 
 {{- define "budgetwise.postgresql-secret" -}}
-{{- printf "%s-postgresql-secret" (include "budgetwise.fullname" .) -}}
+{{- printf "postgresql-secret"}}
 {{- end -}}
 
 {{- define "budgetwise.postgresql-secret-name" -}}
-{{- printf "%s-postgresql-secret" (include "budgetwise.fullname" .) -}}
+{{- printf "postgresql-secret"}}
 {{- end -}}
