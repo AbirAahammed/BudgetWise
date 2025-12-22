@@ -67,7 +67,7 @@ spec:
                 secretKeyRef:
                   name: {{ include "budgetwise.postgresql-secret-name" . }}
                   key: postgresql-password
-                     resources:
+          resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
