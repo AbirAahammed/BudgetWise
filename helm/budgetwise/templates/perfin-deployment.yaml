@@ -21,6 +21,7 @@ spec:
       {{- end }}
       labels:
         {{- include "budgetwise.selectorLabels" . | nindent 8 }}
+      app: {{ .Values.perfin.appName }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
