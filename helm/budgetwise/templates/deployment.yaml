@@ -67,6 +67,8 @@ spec:
                 secretKeyRef:
                   name: {{ include "budgetwise.fullname" . }}-mongodb-secret
                   key: mongodb-uri
+            - name: PERFIN_SERVICE_URL
+              value: "http://{{ include "budgetwise.fullname" . }}-perfin:{{ .Values.perfin.service.port }}"
             {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
