@@ -14,3 +14,4 @@ spec:
       name: http
   selector:
     {{- include "budgetwise.selectorLabels" . | nindent 4 }}
+    app: {{ .Chart.Name }}
