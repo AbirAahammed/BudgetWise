@@ -20,7 +20,7 @@ export type OpenAPIConfig = {
 };
 
 export const OpenAPI: OpenAPIConfig = {
-    BASE: process.env.PERFIN_SERVICE_URL || 'http://localhost:8080',
+    BASE: process.env.PERFIN_SERVICE_URL || 'http://perfin-service.default.svc.cluster.local:8080',
 
     VERSION: '0',
     WITH_CREDENTIALS: false,
