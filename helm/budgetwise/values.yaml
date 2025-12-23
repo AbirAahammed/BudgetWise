@@ -3,14 +3,14 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/abiraahammed/budgetwise
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   tag: "main"
 
 perfin:
   appName: "perfin"
   image:
     repository: ghcr.io/abiraahammed/perfin
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
     tag: "main"
   service:
     port: 8080
