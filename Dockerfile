@@ -50,6 +50,9 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# test connection remove post testing
+RUN apk add curl
+
 USER nextjs
 
 EXPOSE 3000
