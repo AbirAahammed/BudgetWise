@@ -10,7 +10,7 @@ import { AddCardDialog } from '@/components/debt/add-card-dialog';
 import { EditCardDialog } from '@/components/debt/edit-card-dialog';
 
 // Set the API base URL
-OpenAPI.BASE = 'http://localhost:8080';
+OpenAPI.BASE = process.env.PERFIN_SERVICE_URL || 'http://localhost:8080';
 
 export default function DebtPage() {
   const [cards, setCards] = useState<Card[]>([]);
