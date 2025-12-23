@@ -19,8 +19,8 @@ maintainers:
   - name: Abir Aahammed
     url: https://github.com/AbirAahammed
 
-dependencies:
-  - name: mongodb
-    version: "14.x.x"
-    repository: "https://charts.bitnami.com/bitnami"
-    condition: mongodb.enabled
+# dependencies:
+#   - name: mongodb
+#     version: "14.x.x"
+#     repository: "https://charts.bitnami.com/bitnami"
+#     condition: mongodb.enabled
