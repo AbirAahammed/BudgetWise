@@ -8,6 +8,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { useToast } from '@/hooks/use-toast';
 import { AddCardDialog } from '@/components/debt/add-card-dialog';
 import { EditCardDialog } from '@/components/debt/edit-card-dialog';
+import { fetchData } from '@/lib/utils';
 
 // Set the API base URL
 OpenAPI.BASE = process.env.PERFIN_SERVICE_URL || 'http://localhost:8080';
@@ -21,10 +22,12 @@ export default function DebtPage() {
   const [selectedEditCard, setSelectedEditCard] = useState<Card | null>(null);
   const { toast } = useToast();
 
+  
   const fetchCards = useCallback(async () => {
     try {
       setLoading(true);
-      const cardsData = await CardControllerService.card();
+      const cardsData = await fetchData('card'); // Fetch cards using the utility function
+      // const cardsData = await CardControllerService.card();
       setCards(cardsData);
       
       // Set the first card as selected

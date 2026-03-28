@@ -8,6 +8,7 @@ import {
   Coffee, Gamepad2, Music, Smartphone, Laptop, Shirt, Plane, Fuel,
   Zap, Wifi, Phone, CreditCard, Building
 } from 'lucide-react';
+import { fetchData } from '@/lib/utils';
 
 // Updated icon mapping function to handle all available icons
 function getIconForCategory(iconName: string) {
@@ -100,13 +101,7 @@ const AppContext = createContext<AppContextType>({
   removeCategory: async () => {},
 });
 
-async function fetchData(endpoint: string) {
-  const response = await fetch(`/api/${endpoint}`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${endpoint}`);
-  }
-  return response.json();
-}
+
 
 async function postData(endpoint: string, data: any) {
     const response = await fetch(`/api/${endpoint}`, {
