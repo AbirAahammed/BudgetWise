@@ -15,7 +15,7 @@ perfin:
   service:
     port: 8080
   env:
-    SPRING_DATASOURCE_URL: "jdbc:postgresql://10.0.0.245:5432/metrics"
+    SPRING_DATASOURCE_URL: "jdbc:postgresql://10.0.0.245:5432/budgetwise"
 imagePullSecrets:
   - name: ghcr-secret
 nameOverride: ""
