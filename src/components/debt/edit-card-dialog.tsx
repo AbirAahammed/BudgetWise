@@ -36,6 +36,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { CardControllerService, type Card } from '@/api';
 import { useToast } from '@/hooks/use-toast';
+import { putData } from '@/lib/utils';
 
 const formSchema = z.object({
   creditLimit: z.coerce.number().positive({ message: 'Credit limit must be positive.' }),
@@ -71,11 +72,17 @@ export function EditCardDialog({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
-      const updatedCard = await CardControllerService.updateCard({
-        cardName: card.cardName || '',
+      const updatedCard = await putData(`debt`, {
+        id: card.id,
+        cardName: card.cardName,
         creditLimit: values.creditLimit,
         currentBalance: values.currentBalance,
       });
+      // const updatedCard = await CardControllerService.updateCard({
+      //   cardName: card.cardName || '',
+      //   creditLimit: values.creditLimit,
+      //   currentBalance: values.currentBalance,
+      // });
 
       toast({
         title: 'Card Updated',

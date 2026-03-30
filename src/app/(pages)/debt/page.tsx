@@ -27,7 +27,6 @@ export default function DebtPage() {
     try {
       setLoading(true);
       const cardsData = await fetchData('debt'); // Fetch cards using the utility function
-      // const cardsData = await CardControllerService.card();
       setCards(cardsData);
       
       // Set the first card as selected

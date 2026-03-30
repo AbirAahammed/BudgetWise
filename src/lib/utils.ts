@@ -30,6 +30,20 @@ export async function postData(endpoint: string, data: any) {
     return response.json();
 }
 
+export async function putData(endpoint: string, data: any) {
+    const response = await fetch(`/api/${endpoint}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+        throw new Error(`Failed to put to ${endpoint}`);
+    }
+    return response.json();
+}
+
 export async function deleteData(endpoint: string) {
     const response = await fetch(`/api/${endpoint}`, {
         method: 'DELETE',
