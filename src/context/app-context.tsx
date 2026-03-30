@@ -8,7 +8,7 @@ import {
   Coffee, Gamepad2, Music, Smartphone, Laptop, Shirt, Plane, Fuel,
   Zap, Wifi, Phone, CreditCard, Building
 } from 'lucide-react';
-import { fetchData } from '@/lib/utils';
+import { fetchData, postData, deleteData } from '@/lib/utils';
 
 // Updated icon mapping function to handle all available icons
 function getIconForCategory(iconName: string) {
@@ -101,31 +101,6 @@ const AppContext = createContext<AppContextType>({
   removeCategory: async () => {},
 });
 
-
-
-async function postData(endpoint: string, data: any) {
-    const response = await fetch(`/api/${endpoint}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    });
-    if (!response.ok) {
-        throw new Error(`Failed to post to ${endpoint}`);
-    }
-    return response.json();
-}
-
-async function deleteData(endpoint: string) {
-    const response = await fetch(`/api/${endpoint}`, {
-        method: 'DELETE',
-    });
-    if (!response.ok) {
-        throw new Error(`Failed to delete ${endpoint}`);
-    }
-    return response.json();
-}
 
 
 export function AppProvider({ children }: { children: ReactNode }) {

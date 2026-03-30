@@ -26,6 +26,7 @@ import { Input } from '@/components/ui/input';
 import { PlusCircle } from 'lucide-react';
 import { CardControllerService, type Card } from '@/api';
 import { useToast } from '@/hooks/use-toast';
+import { fetchData, postData } from '@/lib/utils';
 
 const formSchema = z.object({
   cardName: z.string().min(2, { message: 'Card name must be at least 2 characters.' }),
@@ -54,7 +55,7 @@ export function AddCardDialog({ onCardAdded }: AddCardDialogProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
-      const newCard = await CardControllerService.addCard({
+      const newCard = await postData('debt', {
         cardName: values.cardName,
         creditLimit: values.creditLimit,
         currentBalance: values.currentBalance,
