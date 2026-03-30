@@ -26,6 +26,8 @@ export default function DebtPage() {
   const fetchCards = useCallback(async () => {
     try {
       setLoading(true);
+      console.log('Fetching cards from API...');
+      fetchData('categories').then(data => console.log('Categories:', data)).catch(err => console.error('Failed to fetch categories:', err));
       const cardsData = await fetchData('card'); // Fetch cards using the utility function
       // const cardsData = await CardControllerService.card();
       setCards(cardsData);
