@@ -30,3 +30,18 @@ Immediately delete the plaintext files to stay secure.
 ```bash
 rm dockerconfig.json secret.yaml
 ```
+
+
+kubectl create secret docker-registry ghcr-secret \
+  --namespace budgetwise \
+  --docker-server=ghcr.io \
+  --docker-username=abiraahammed \
+  --docker-password=ghp_OVAeOiis \
+  --docker-email=ahammed.abir47@gmail.com \
+  --dry-run=client -o yaml > secret.yaml
+
+kubectl create secret generic postgresql-secret \
+  --namespace=budgetwise-dev \
+  --from-literal=postgresql-username=asdasdad \
+  --from-literal=postgresql-password=asdasd \
+  --dry-run=client -o yaml > secret.yaml
