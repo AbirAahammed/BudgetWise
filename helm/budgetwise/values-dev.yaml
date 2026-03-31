@@ -1,0 +1,112 @@
+# Default values for budgetwise
+replicaCount: 1
+namespace: budgetwise-dev
+budgetwise:
+  appName: "budgetwise"
+  image:
+    repository: ghcr.io/abiraahammed/budgetwise
+    pullPolicy: Always
+    tag: "develop"
+  
+perfin:
+  appName: "perfin"
+  image:
+    repository: ghcr.io/abiraahammed/perfin
+    pullPolicy: Always
+    tag: "main"
+  service:
+    port: 8080
+  env:
+    SPRING_DATASOURCE_URL: "jdbc:postgresql://10.0.0.245:5432/budgetwise-dev"
+imagePullSecrets:
+  - name: ghcr-secret
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+  imagePullSecrets:
+    - name: ghcr-secret
+
+sealedSecrets:
+  ghcrSecret:
+    name: ghcr-secret
+    type: kubernetes.io/dockerconfigjson
+    encryptedData: 
+      ".dockerconfigjson": "AgCBBQKejer9/dg2vJeDpNDOtgpk7/SRhkNCwNzQznWSPt4LBJsI/y3R+sD3seH0DR8QEkH2ZLSWj1j2Rt/J4YKolConlJc3UQhRBjeaU24TRk6yDze7IURJt9TZsDkGB5x1h7Nc6HflB/zTdanGZWMzj/+mPh9DwjdcqhEoeZrPfirPjkB2Qm9bAk36ONosK3AntpQKtX6yCFcO/JXCe6yAoQWnSGrWHJLsjsYwr0COroe9bu5X7cGRBqkrGybjJhkrxBzb25hD3EE62Tex/ERWFuyJgIHeVFxRpxtZU3txvA4NVKANUXZ9o0rHsOsM0iLcvRkteDeh9BPeKNM1YfXEDr6cru7QDShCC/662mIfK4e6qsJO7cLAVK3AeOR9W6Nqies/2lSBbIoquLkUYSz2z8hBXNF6zY8M/TB+IhZc3/MPLGdvakmkUhntl1fpkVKDuPU/IuhC1faOYposaJREuT0tEND5i4Cj/oicaH4lc9qz0/5CvUacdv2f72bcVXdSpXRwn4h91JawKCBMkaEru4KucWzEPdFXLE3tgUrS4ZXTbI5PRidSXp8ZYNMJGEXyt4f665rruf0kRTCwI30ATqb2o7eVtU1zsdGLTg9VQe7qqqSKFpZ9Mcsd+XAWNuXDhBsIAP3NCyCtvkZRx4faHKJjmonLVzskvMmFGU/eHlo+ABLEAPJ51AXhMK/hq6zpkcIoAguMjpGicKpQ7bWylUo0OMrTABzxKcUGH1+VmuAJEEJjzZWl14LFF4EbIYHeeckf0FHUDcZkhVJWkroxw+mDRUmAEpS+xBpyoKQFOe+cPg6IufrcAtGggri5ovrvZER1qQ9Kd0Bg8nxfr+DFmjoi93Me0gamGu6Kb0j6paxOpnlJLJP4mRepoXzrSlOlip+D2uucvHRwKc01qtuPDzTCxYBHK0QHLqe+Hz7iB9Xs8mI9YQfu3h3aGU3cunHa2HO+QwHbERJh1qqvYuEiRJDmviVMnRGYoXvA"
+
+
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: NodePort
+  port: 3000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: budgetwise.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Environment variables
+env:
+  NODE_ENV: production
+  PORT: 3000
+  HOSTNAME: "0.0.0.0"
+
+# MongoDB configuration
+mongodb:
+  enabled: true
+  auth:
+    enabled: false  # Disable auth for simplicity
+  persistence:
+    enabled: true
+    size: 8Gi
+    accessMode: ReadWriteOnce
+    storageClass: ""  # Use default storage class
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+
+# Database seeding
+seed:
+  enabled: true
+  job:
+    restartPolicy: Never
+    backoffLimit: 3
