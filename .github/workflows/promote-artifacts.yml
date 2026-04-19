@@ -42,7 +42,7 @@ jobs:
 
       - name: Pull existing image
         run: |
-          docker pull ghcr.io/${{ env.IMAGE_NAME_LC }}:${{ inputs.image_tag }}
+          docker pull ghcr.io/${{ env.IMAGE_NAME_LC }}:${{ inputs.branch }}
 
       - name: Tag image with new version
         run: |
