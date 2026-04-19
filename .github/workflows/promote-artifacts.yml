@@ -14,6 +14,7 @@ on:
       image_tag:
         description: 'Docker image tag to promote'
         required: true
+        type: choice
         options:
           - develop
           - main
