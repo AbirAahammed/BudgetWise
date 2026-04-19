@@ -1,0 +1,56 @@
+name: Promote Artifacts
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to promote to'
+        required: true
+        type: choice
+        options:
+          - dev
+          - stage
+          - prod
+      image_tag:
+        description: 'Docker image tag to promote'
+        required: true
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout GitOps repo
+        uses: actions/checkout@v4
+        with:
+          repository: AbirAahammed/BudgetWise-gitops
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: gitops
+
+      - name: Install yq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+          wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O yq
+          chmod +x yq
+          sudo mv yq /usr/local/bin/
+
+      - name: Update values.yaml
+        run: |
+          cd gitops
+
+          FILE="gitops/budgetwise/${{ inputs.environment }}/values.yaml"
+
+          echo "Updating $FILE with image tag ${{ inputs.image_tag }}"
+
+          yq e -i '.image.tag = "${{ inputs.image_tag }}"' $FILE
+
+      - name: Commit and push changes
+        run: |
+          cd gitops
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add .
+          git commit -m "promote: ${{ inputs.environment }} → ${{ inputs.image_tag }}"
+          git push
