@@ -14,6 +14,9 @@ on:
       image_tag:
         description: 'Docker image tag to promote'
         required: true
+        options:
+          - develop
+          - main
 
 jobs:
   promote:
@@ -43,7 +46,7 @@ jobs:
 
           echo "Updating $FILE with image tag ${{ inputs.image_tag }}"
 
-          yq e -i '.image.tag = "${{ inputs.image_tag }}"' $FILE
+          yq e -i 'budgetwise.image.tag = "${{ inputs.image_tag }}"' $FILE
 
       - name: Commit and push changes
         run: |
