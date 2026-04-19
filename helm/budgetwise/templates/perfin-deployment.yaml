@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "budgetwise.fullname" . }}-perfin
-  namespace: {{ .Chart.Name }}
+  namespace: {{ include "budgetwise.namespace" . }}
   labels:
     {{- include "budgetwise.labels" . | nindent 4 }}
     app: perfin
