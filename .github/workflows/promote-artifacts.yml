@@ -77,7 +77,7 @@ jobs:
         run: |
           cd gitops
 
-          FILE="gitops/budgetwise/${{ inputs.environment }}/values.yaml"
+          FILE="env/${{ inputs.environment }}/values.yaml"
 
           echo "Updating $FILE with image tag ${{ inputs.image_tag }}"
 
