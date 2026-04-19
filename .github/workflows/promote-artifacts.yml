@@ -37,10 +37,12 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set lowercase image name
+        run: echo "IMAGE_NAME_LC=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
 
       - name: Pull existing image
         run: |
-          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.branch }}
+          docker pull ghcr.io/${{ env.IMAGE_NAME_LC }}:${{ inputs.source_tag }}
 
       - name: Tag image with new version
         run: |
