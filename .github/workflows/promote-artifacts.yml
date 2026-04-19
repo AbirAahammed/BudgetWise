@@ -54,6 +54,7 @@ jobs:
         run: |
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.image_tag }}
   promote:
+    needs: re-tag-image
     runs-on: ubuntu-latest
 
     steps:
