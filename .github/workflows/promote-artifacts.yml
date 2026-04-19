@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: AbirAahammed/BudgetWise-gitops
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GIT_REPO_TOKEN }}
           path: gitops
 
       - name: Install yq
