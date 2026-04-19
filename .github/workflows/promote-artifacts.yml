@@ -80,9 +80,8 @@ jobs:
           FILE="env/${{ inputs.environment }}/values.yaml"
 
           echo "Updating $FILE with image tag ${{ inputs.image_tag }}"
-
-          yq e -i 'budgetwise.image.tag = "${{ inputs.image_tag }}"' $FILE
-
+          
+          yq e -i '.budgetwise.image.tag = "${{ inputs.image_tag }}"' $FILE
       - name: Commit and push changes
         run: |
           cd gitops
