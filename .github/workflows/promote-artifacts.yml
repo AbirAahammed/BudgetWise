@@ -9,18 +9,52 @@ on:
         type: choice
         options:
           - dev
-          - stage
           - prod
-      image_tag:
-        description: 'Docker image tag to promote'
+      branch:
+        description: 'Branch to promote from'
         required: true
         type: choice
         options:
-          - develop
           - main
-
+          - develop
+      image_tag:
+        description: 'Docker image tag to promote'
+        required: true
+        type: string
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 jobs:
+  re-tag-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set lowercase image name
+        run: echo "IMAGE_NAME_LC=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
+      - name: Pull existing image
+        run: |
+          docker pull ghcr.io/${{ env.IMAGE_NAME_LC }}:${{ inputs.branch }}
+
+      - name: Tag image with new version
+        run: |
+          docker tag \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}:${{ inputs.branch }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}:${{ inputs.image_tag }}
+
+      - name: Push new tag
+        run: |
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}:${{ inputs.image_tag }}
   promote:
+    needs: re-tag-image
     runs-on: ubuntu-latest
 
     steps:
@@ -28,7 +62,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: AbirAahammed/BudgetWise-gitops
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GIT_REPO_TOKEN }}
           path: gitops
 
       - name: Install yq
@@ -43,12 +77,11 @@ jobs:
         run: |
           cd gitops
 
-          FILE="gitops/budgetwise/${{ inputs.environment }}/values.yaml"
+          FILE="env/${{ inputs.environment }}/values.yaml"
 
           echo "Updating $FILE with image tag ${{ inputs.image_tag }}"
-
-          yq e -i 'budgetwise.image.tag = "${{ inputs.image_tag }}"' $FILE
-
+          
+          yq e -i '.budgetwise.image.tag = "${{ inputs.image_tag }}"' $FILE
       - name: Commit and push changes
         run: |
           cd gitops
