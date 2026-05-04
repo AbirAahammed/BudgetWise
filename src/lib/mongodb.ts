@@ -43,8 +43,10 @@ class MongoDBService {
 
   private async connect() {
     try {
-      const uri = process.env.MONGODB_URI || 'mongodb://budgetwise:budgetwise_password@localhost:27017/budgetwise?authSource=admin';
-      
+      const uri : string | undefined = process.env.MONGODB_URI 
+      if (!uri) {
+        throw new Error('MONGODB_URI environment variable is not set');
+      }
       this.client = new MongoClient(uri);
       await this.client.connect();
       this.db = this.client.db('budgetwise');
