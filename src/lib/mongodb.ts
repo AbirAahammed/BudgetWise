@@ -49,7 +49,7 @@ class MongoDBService {
       }
       this.client = new MongoClient(uri);
       await this.client.connect();
-      this.db = this.client.db('budgetwise');
+      this.db = this.client.db(process.env.MONGODB);
       this.isConnected = true;
       
       console.log('✅ Connected to MongoDB');
